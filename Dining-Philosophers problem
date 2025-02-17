@@ -1,0 +1,38 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;unistd.h&gt;
+#define NUM_PHILOSOPHERS 5
+pthread_mutex_t forks[NUM_PHILOSOPHERS]; 
+void* philosopher(void* num) {
+int id = *(int*)num;
+while (1) {
+printf(&quot;Philosopher %d is thinking.\n&quot;, id);
+sleep(rand() % 3); 
+pthread_mutex_lock(&amp;forks[id]);
+pthread_mutex_lock(&amp;forks[(id + 1) % NUM_PHILOSOPHERS]); 
+printf(&quot;Philosopher %d is eating.\n&quot;, id);
+sleep(rand() % 3);
+pthread_mutex_unlock(&amp;forks[id]);
+pthread_mutex_unlock(&amp;forks[(id + 1) % NUM_PHILOSOPHERS]); 
+fork
+}
+}
+int main() {
+pthread_t philosophers[NUM_PHILOSOPHERS];
+int philosopher_ids[NUM_PHILOSOPHERS];
+for (int i = 0; i &lt; NUM_PHILOSOPHERS; i++) {
+pthread_mutex_init(&amp;forks[i], NULL);
+philosopher_ids[i] = i; // Assign philosopher IDs
+}
+for (int i = 0; i &lt; NUM_PHILOSOPHERS; i++) {
+pthread_create(&amp;philosophers[i], NULL, philosopher, &amp;philosopher_ids[i]);
+}
+for (int i = 0; i &lt; NUM_PHILOSOPHERS; i++) {
+pthread_join(philosophers[i], NULL);
+}
+for (int i = 0; i &lt; NUM_PHILOSOPHERS; i++) {
+pthread_mutex_destroy(&amp;forks[i]);
+}
+return 0;
+}
