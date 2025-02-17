@@ -1,0 +1,78 @@
+#include &lt;stdio.h&gt;
+
+#define MAX_PROCESSES 5
+#define MAX_RESOURCES 3
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES] = {
+{0, 1, 0},
+{2, 0, 0},
+{3, 0, 2},
+{2, 1, 1},
+{0, 0, 2}
+};
+
+int max[MAX_PROCESSES][MAX_RESOURCES] = {
+{7, 5, 3},
+{3, 2, 2},
+{9, 0, 2},
+{2, 2, 2},
+{4, 3, 3}
+};
+
+int available[MAX_RESOURCES] = {3, 3, 2};
+
+int need[MAX_PROCESSES][MAX_RESOURCES];
+
+void calculateNeed() {
+for (int i = 0; i &lt; MAX_PROCESSES; i++)
+for (int j = 0; j &lt; MAX_RESOURCES; j++)
+need[i][j] = max[i][j] - allocation[i][j];
+}
+
+int isSafe() {
+int work[MAX_RESOURCES], finish[MAX_PROCESSES] = {0},
+safeSeq[MAX_PROCESSES];
+
+for (int i = 0; i &lt; MAX_RESOURCES; i++)
+work[i] = available[i];
+
+int count = 0;
+while (count &lt; MAX_PROCESSES) {
+int found = 0;
+for (int i = 0; i &lt; MAX_PROCESSES; i++) {
+if (!finish[i]) {
+int j;
+for (j = 0; j &lt; MAX_RESOURCES; j++)
+if (need[i][j] &gt; work[j])
+break;
+
+if (j == MAX_RESOURCES) {
+for (int k = 0; k &lt; MAX_RESOURCES; k++)
+work[k] += allocation[i][k];
+
+safeSeq[count++] = i;
+finish[i] = 1;
+found = 1;
+}
+}
+}
+if (!found) {
+printf(&quot;System is in an UNSAFE state.\n&quot;);
+return 0;
+}
+}
+
+printf(&quot;System is in a SAFE state.\nSafe Sequence: &quot;);
+
+for (int i = 0; i &lt; MAX_PROCESSES; i++)
+printf(&quot;%d &quot;, safeSeq[i]);
+printf(&quot;\n&quot;);
+
+return 1;
+}
+
+int main() {
+calculateNeed();
+isSafe();
+return 0;
+}
