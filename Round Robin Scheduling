@@ -1,0 +1,63 @@
+#include &lt;stdio.h&gt;
+#define MAX_PROCESSES 100
+struct Process {
+int id; 
+int burstTime; 
+int remainingTime; 
+int waitingTime; 
+int turnaroundTime;
+int completionTime; 
+};
+void roundRobin(struct Process processes[], int n, int timeQuantum) {
+int time = 0; 
+int completed = 0; 
+while (completed &lt; n) {
+for (int i = 0; i &lt; n; i++) {
+if (processes[i].remainingTime &gt; 0) {
+if (processes[i].remainingTime &gt; timeQuantum) {
+time += timeQuantum;
+processes[i].remainingTime -= timeQuantum;
+} else {
+time += processes[i].remainingTime;
+processes[i].completionTime = time;
+processes[i].remainingTime = 0;
+processes[i].turnaroundTime = processes[i].completionTime; 
+time = Completion time - Arrival time (0 for all here)
+processes[i].waitingTime = processes[i].turnaroundTime -
+processes[i].burstTime; 
+completed++;
+}
+}
+}
+}
+}
+void printResults(struct Process processes[], int n) {
+printf(&quot;\nProcess ID\tBurst Time\tCompletion Time\tTurnaround Time\tWaiting
+Time\n&quot;);
+
+for (int i = 0; i &lt; n; i++) {
+printf(&quot;%d\t\t%d\t\t%d\t\t%d\t\t%d\n&quot;,
+processes[i].id,
+processes[i].burstTime,
+processes[i].completionTime,
+processes[i].turnaroundTime,
+processes[i].waitingTime);
+}
+}
+int main() {
+struct Process processes[MAX_PROCESSES];
+int n, timeQuantum;
+printf(&quot;Enter number of processes: &quot;);
+scanf(&quot;%d&quot;, &amp;n);
+for (int i = 0; i &lt; n; i++) {
+processes[i].id = i + 1; 
+printf(&quot;Enter burst time for process %d: &quot;, processes[i].id);
+scanf(&quot;%d&quot;, &amp;processes[i].burstTime);
+processes[i].remainingTime = processes[i].burstTime; 
+}
+printf(&quot;Enter time quantum: &quot;);
+scanf(&quot;%d&quot;, &amp;timeQuantum);
+roundRobin(processes, n, timeQuantum);
+printResults(processes, n);
+return 0;
+}
