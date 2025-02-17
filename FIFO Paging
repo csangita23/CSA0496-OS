@@ -1,0 +1,57 @@
+#include &lt;stdio.h&gt;
+
+#define MAX_FRAMES 10
+#define MAX_PAGES 50
+
+int isPageInFrame(int frames[], int num_frames, int page) {
+for (int i = 0; i &lt; num_frames; i++) {
+if (frames[i] == page) {
+return 1;
+}
+}
+return 0; 
+}
+void fifoPageReplacement(int pages[], int num_pages, int num_frames) {
+int frames[MAX_FRAMES]; 
+int page_faults = 0; 
+int index = 0; 
+for (int i = 0; i &lt; num_frames; i++) {
+frames[i] = -1;
+}
+
+printf(&quot;\nPage Reference | Frames\n&quot;);
+printf(&quot;------------------------\n&quot;);
+for (int i = 0; i &lt; num_pages; i++) {
+printf(&quot;%12d | &quot;, pages[i]);
+if (!isPageInFrame(frames, num_frames, pages[i])) {
+frames[index] = pages[i]; 
+index = (index + 1) % num_frames; 
+page_faults++; 
+}
+for (int j = 0; j &lt; num_frames; j++) {
+if (frames[j] != -1)
+printf(&quot;%d &quot;, frames[j]);
+else
+printf(&quot;- &quot;);
+}
+
+printf(&quot;\n&quot;);
+}
+
+printf(&quot;\nTotal Page Faults: %d\n&quot;, page_faults);
+}
+
+int main() {
+int num_pages, num_frames;
+int pages[MAX_PAGES];
+printf(&quot;Enter number of pages: &quot;);
+scanf(&quot;%d&quot;, &amp;num_pages);
+printf(&quot;Enter the page reference string: &quot;);
+for (int i = 0; i &lt; num_pages; i++) {
+scanf(&quot;%d&quot;, &amp;pages[i]);
+}
+printf(&quot;Enter number of frames: &quot;);
+scanf(&quot;%d&quot;, &amp;num_frames);
+fifoPageReplacement(pages, num_pages, num_frames);
+return 0;
+}
