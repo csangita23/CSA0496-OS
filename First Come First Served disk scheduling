@@ -1,0 +1,29 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+void fcfsDiskScheduling(int requests[], int n, int head) {
+int totalSeekTime = 0;
+printf(&quot;\nSeek Sequence: &quot;);
+printf(&quot;%d&quot;, head); 
+for (int i = 0; i &lt; n; i++) {
+printf(&quot; -&gt; %d&quot;, requests[i]); 
+totalSeekTime += abs(requests[i] - head); 
+head = requests[i]; 
+}
+printf(&quot;\nTotal Seek Time: %d\n&quot;, totalSeekTime);
+printf(&quot;Average Seek Time: %.2f\n&quot;, (float)totalSeekTime / n);
+}
+int main() {
+int n, head;
+printf(&quot;Enter the number of disk requests: &quot;);
+scanf(&quot;%d&quot;, &amp;n);
+int requests[n];
+printf(&quot;Enter the disk request sequence: &quot;);
+for (int i = 0; i &lt; n; i++) {
+scanf(&quot;%d&quot;, &amp;requests[i]);
+}
+printf(&quot;Enter the initial head position: &quot;);
+scanf(&quot;%d&quot;, &amp;head);
+printf(&quot;\nFCFS Disk Scheduling Algorithm:\n&quot;);
+fcfsDiskScheduling(requests, n, head);
+return 0;
+}
