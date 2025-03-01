@@ -1,0 +1,106 @@
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#define MAX_FILES 100 
+struct Directory {
+char files[MAX_FILES][50]; 
+int fileCount; 
+};
+void createFile(struct Directory *dir) {
+if (dir-&gt;fileCount &gt;= MAX_FILES) {
+printf(&quot;Directory is full! Cannot create more files.\n&quot;);
+return;
+}
+char fileName[50];
+printf(&quot;Enter the file name to create: &quot;);
+scanf(&quot;%s&quot;, fileName);
+int i = 0;
+while (i &lt; dir-&gt;fileCount) {
+if (strcmp(dir-&gt;files[i], fileName) == 0) {
+printf(&quot;File already exists!\n&quot;);
+return;
+}
+i++;
+}
+strcpy(dir-&gt;files[dir-&gt;fileCount], fileName);
+dir-&gt;fileCount++;
+printf(&quot;File &#39;%s&#39; created successfully.\n&quot;, fileName);
+}
+void deleteFile(struct Directory *dir) {
+if (dir-&gt;fileCount == 0) {
+printf(&quot;No files to delete.\n&quot;);
+return;
+}
+char fileName[50];
+printf(&quot;Enter the file name to delete: &quot;);
+scanf(&quot;%s&quot;, fileName);
+int i = 0;
+while (i &lt; dir-&gt;fileCount) {
+if (strcmp(dir-&gt;files[i], fileName) == 0) {
+int j = i;
+while (j &lt; dir-&gt;fileCount - 1) {
+strcpy(dir-&gt;files[j], dir-&gt;files[j + 1]);
+j++;
+}
+dir-&gt;fileCount--;
+printf(&quot;File &#39;%s&#39; deleted successfully.\n&quot;, fileName);
+return;
+}
+i++;
+}
+printf(&quot;File not found!\n&quot;);
+}
+void searchFile(struct Directory *dir) {
+char fileName[50];
+printf(&quot;Enter the file name to search: &quot;);
+scanf(&quot;%s&quot;, fileName);
+int i = 0;
+while (i &lt; dir-&gt;fileCount) {
+if (strcmp(dir-&gt;files[i], fileName) == 0) {
+printf(&quot;File &#39;%s&#39; found in the directory.\n&quot;, fileName);
+return;
+}
+i++;
+}
+printf(&quot;File &#39;%s&#39; not found in the directory.\n&quot;, fileName);
+}
+void displayFiles(struct Directory *dir) {
+if (dir-&gt;fileCount == 0) {
+printf(&quot;No files in the directory.\n&quot;);
+return;
+}
+printf(&quot;Files in the directory:\n&quot;);
+int i = 0;
+while (i &lt; dir-&gt;fileCount) {
+printf(&quot;%d. %s\n&quot;, i + 1, dir-&gt;files[i]);
+i++;
+}
+}
+int main() {
+struct Directory dir;
+dir.fileCount = 0; 
+int choice = 1;
+while (choice != 5) {
+printf(&quot;\nSingle-Level Directory System\n&quot;);
+printf(&quot;1. Create File\n&quot;);
+printf(&quot;2. Delete File\n&quot;);
+printf(&quot;3. Search File\n&quot;);
+printf(&quot;4. Display Files\n&quot;);
+printf(&quot;5. Exit\n&quot;);
+printf(&quot;Enter your choice: &quot;);
+scanf(&quot;%d&quot;, &amp;choice);
+if (choice == 1) {
+createFile(&amp;dir);
+} else if (choice == 2) {
+deleteFile(&amp;dir);
+} else if (choice == 3) {
+searchFile(&amp;dir);
+} else if (choice == 4) {
+displayFiles(&amp;dir);
+} else if (choice == 5) {
+printf(&quot;Exiting the program.\n&quot;);
+} else {
+printf(&quot;Invalid choice! Please try again.\n&quot;);
+}
+}
+return 0;
+}
